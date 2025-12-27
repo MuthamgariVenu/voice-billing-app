@@ -9,11 +9,11 @@ const app = express();
 
 /* ==================== MIDDLEWARE ==================== */
 
-// ✅ CORS FIX – ONLY ALLOW VERCEL FRONTEND
+// ✅ CORS – allow ONLY Vercel frontend
 app.use(
   cors({
     origin: "https://voice-billing-app-frontend.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
   })
@@ -26,10 +26,10 @@ app.use(express.json());
 const adminRoutes = require("./src/admin/admin.routes");
 const authRoutes = require("./src/auth/auth.routes");
 const productRoutes = require("./src/products/product.routes");
-const billRoutes = require("./src/billing/bill.routes.js");
+const billRoutes = require("./src/billing/bill.routes");
 const reportRoutes = require("./src/reports/report.routes");
 
-// 🔥 HEALTH CHECK (IMPORTANT FOR RENDER)
+// 🔥 HEALTH CHECK (Render)
 app.get("/api", (req, res) => {
   res.json({ status: "Backend is running ✅" });
 });
@@ -45,7 +45,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch(err => {
-    console.error("❌ Mongo error:", err.message);
+    console.error("❌ MongoDB connection error:", err.message);
     process.exit(1);
   });
 

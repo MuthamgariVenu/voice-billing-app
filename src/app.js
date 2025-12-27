@@ -11,11 +11,11 @@ const app = express();
 
 /* ==================== MIDDLEWARE ==================== */
 
-// ✅ CORS FIX – allow ONLY Vercel frontend
+// ✅ CORS – allow ONLY Vercel frontend
 app.use(
   cors({
     origin: "https://voice-billing-app-frontend.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
   })
@@ -23,6 +23,11 @@ app.use(
 
 // 🔥 MUST be before routes
 app.use(express.json());
+
+/* ==================== HEALTH CHECK ==================== */
+app.get("/api", (req, res) => {
+  res.json({ status: "Backend running ✅" });
+});
 
 /* ==================== DB ==================== */
 connectDB();
@@ -32,10 +37,5 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/bills", billRoutes);
 app.use("/api/reports", reportsRoutes);
-
-/* ==================== HEALTH CHECK ==================== */
-app.get("/api", (req, res) => {
-  res.json({ status: "Backend running ✅" });
-});
 
 module.exports = app;
